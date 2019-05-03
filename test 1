@@ -1,0 +1,43 @@
+import requests
+import urllib.request
+import time
+from bs4 import BeautifulSoup
+
+# get webpage in html
+url = "https://web.tmxmoney.com/quote.php?qm_symbol=BBD.A"
+page = requests.get(url)
+
+# parse webpage with BeautifulSoup, get tags with class "detailed-quote-table'
+soup = BeautifulSoup(page.text, "html.parser")
+detailed_quote_tables = soup.findAll(class_="detailed-quote-table")
+
+# clean data into list format
+detailed_quotes_text_list = [dq.get_text() for dq in detailed_quote_tables]
+detailed_quotes_string = ''.join(detailed_quotes_text_list)
+detailed_quotes = detailed_quotes_string.split('\n\n')
+
+# remove empty element
+for dq in detailed_quotes:
+    if dq == '':
+        detailed_quotes.remove(dq)
+
+# clean data for csv format, like change line-break to comman etc
+# this part is slow (because of string creation) so should find a better way
+for i in range(len(detailed_quotes)):
+    detailed_quotes[i] = detailed_quotes[i].replace('\t', '')
+    detailed_quotes[i] = detailed_quotes[i].replace('\n', ',')
+    detailed_quotes[i] = detailed_quotes[i].replace(':', '')
+    detailed_quotes[i] = detailed_quotes[i].replace('[', '')
+    table = str.maketrans("'", 1*" ")
+    detailed_quotes[i].translate(table)
+    #detailed_quotes[i] = detailed_quotes[i].replace(',', '');
+    detailed_quotes[i] = detailed_quotes[i].replace("'","")
+    detailed_quotes[i] = detailed_quotes[i].replace(",'", '')
+
+# write data to file
+#with open("soup.csv", "w") as f:
+#    f.write('\n'.join(detailed_quotes))
+#print(detailed_quotes)
+
+file = open("C:\\Users\\i hate Microsoft\\Desktop\\bob\\bob.txt", "w")
+file.write(str(detailed_quotes))
