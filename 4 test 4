@@ -5,7 +5,7 @@ import ast                  #cant remember why imported
 import pandas as pd         #for transposing csv
 import csv                  #for transposing csv
 import itertools            #this works
-from itertools import izip  #this doesnt work because it cant fint izip but can zip?
+#from itertools import izip  #this doesnt work because it cant fint izip but can zip?
 
 
 # get webpage in html (im also goin to make this a loop for one file for all the data)
