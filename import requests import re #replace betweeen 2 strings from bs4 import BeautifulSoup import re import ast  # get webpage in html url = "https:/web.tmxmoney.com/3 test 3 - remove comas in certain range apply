@@ -1,0 +1,51 @@
+import requests
+import re #replace betweeen 2 strings
+from bs4 import BeautifulSoup
+import re
+import ast
+
+# get webpage in html
+url = "https://web.tmxmoney.com/quote.php?qm_symbol=BBD.A"
+page = requests.get(url)
+
+# parse webpage with BeautifulSoup, get tags with class "detailed-quote-table'
+soup = BeautifulSoup(page.text, "html.parser")
+detailed_quote_tables = soup.findAll(class_="detailed-quote-table")
+
+# clean data into list format
+detailed_quotes_text_list = [dq.get_text() for dq in detailed_quote_tables]
+detailed_quotes_string = ''.join(detailed_quotes_text_list)
+detailed_quotes = detailed_quotes_string.split('\n\n')
+
+# remove empty element
+for dq in detailed_quotes:
+    if dq == '':
+        detailed_quotes.remove(dq)
+
+# clean data for csv format, like change line-break to comman etc
+# this part is slow (because of string creation) so should find a better way
+
+
+str = detailed_quotes
+print(str)
+start = str.find("Diluted Avg Shares (Last Qtr):") + 31
+#end = detailed_quotes.find("Prev. Close:Pr")
+#str = str[0:start] + str[start:end].replace(',', '') + str[end:]
+
+for i in range(len(detailed_quotes)):
+
+    detailed_quotes[i] = detailed_quotes[i].replace('Prev. Close:', 'Prev. Close:,', 1)
+    detailed_quotes[i] = detailed_quotes[i].replace('Dividend:', 'Dividend:,', 1)
+    detailed_quotes[i] = detailed_quotes[i].replace('Yield:', 'Yield:,', 1)
+    detailed_quotes[i] = detailed_quotes[i].replace('Exchange:', 'Exchange:,', 1)
+    detailed_quotes[i] = detailed_quotes[i].replace('\t', '')
+    detailed_quotes[i] = detailed_quotes[i].replace('\n', ',')
+    if i > 0:
+        detailed_quotes[i] = detailed_quotes[i].replace(',', '', 1)
+
+# write data to file
+with open("C:\\Users\\kevin\\Desktop\\python file exsports\\soup.csv", "w") as f:
+    f.write('\n'.join(detailed_quotes))
+    #f.write('\n'.join(detailed_quotes))
+
+print(detailed_quotes)
