@@ -41,6 +41,9 @@ for i in range(len(detailed_quotes)):
     detailed_quotes[i] = detailed_quotes[i].replace('Exchange:', 'Exchange:,', 1)
     detailed_quotes[i] = detailed_quotes[i].replace('\t', '')
     detailed_quotes[i] = detailed_quotes[i].replace('\n', ',')
+    detailed_quotes[i] = detailed_quotes[i].replace(',', '')
+    detailed_quotes[i] = detailed_quotes[i].replace(':', ',,')
+    detailed_quotes[i] = detailed_quotes[i].replace('Open,', 'Open', 1)
     if i > 0:
         detailed_quotes[i] = detailed_quotes[i].replace(',', '', 1)
         
@@ -50,8 +53,13 @@ for i in range(len(detailed_quotes)):
 ##start = str.find("Diluted Avg Shares (Last Qtr):") + 31
 ##end = detailed_quotes.find("Prev. Close:Pr")
 ##str = str[0:start] + str[start:end].replace(',', '') + str[end:]
+#try 2
+##str = detailed_quotes[i]
+##start = str.find("r):,") + 4
+##end = str.find("Pr")
+##str = str[0:start] + str[start:end].replace(',', '') + str[end:] 
 
-#check 
+#Output check system
 i = 0
 while i < 100:
     print(detailed_quotes[i]+"\n")
@@ -60,7 +68,6 @@ while i < 100:
 # write data to file
 with open("C:\\Users\\kevin\\Desktop\\python file exsports\\soup.csv", "w") as f:           #"w" for write and "a" for append
     f.write('\n'.join(detailed_quotes))
-    #f.write('\n'.join(detailed_quotes))
 
 #Transpose data
 #attempt 1
