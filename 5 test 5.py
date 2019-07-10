@@ -32,7 +32,7 @@ while a <= 2274:
 
     # clean data for csv format, like change line-break to comman etc
     # this part is slow (because of string creation) so should find a better way
-    detailed_quotes[0]= "Symbol,," + Symbol[a] + "\n\n\n\n" + detailed_quotes[0]
+    
     for i in range(len(detailed_quotes)):
         detailed_quotes[i] = detailed_quotes[i].replace('Prev. Close:', 'Prev. Close:,', 1)
         detailed_quotes[i] = detailed_quotes[i].replace('Dividend:', 'Dividend:,', 1)
@@ -52,6 +52,18 @@ while a <= 2274:
     #Attempt 2
     #a = izip(*csv.reader(open("soup.csv", "rb")))
     #csv.writer(open("soup.csv_output.csv", "wb")).writerows(a)
+    #attempt 3
+    Symbol = [12.34,12.34]
+
+    temp = 0
+    for b in range(len(detailed_quotes)): # find length of list in python
+      temp = b
+     print(temp):
+    #b = 100
+    #detailed_quotes[b+1] = 0
+    #while b >= 0:
+    #  detailed_quotes[b+1]=detailed_quotes[b]
+    #detailed_quotes[0]= "Symbol,," + Symbol[a] + "\n\n\n\n" + detailed_quotes[0]
 
     #Output check system
     ##i = 0
