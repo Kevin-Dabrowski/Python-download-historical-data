@@ -26,16 +26,7 @@ detailed_quotes = detailed_quotes_string.split('\n\n')
 for dq in detailed_quotes:
     if dq == '':
         detailed_quotes.remove(dq)
-
-#trying to remove commas in a certain range
-##str = detailed_quotes
-##print(str)
-##start = str.find("Diluted Avg Shares (Last Qtr):") + 31
-##end = detailed_quotes.find("Prev. Close:Pr")
-##str = str[0:start] + str[start:end].replace(',', '') + str[end:]
-
-# clean data for csv format, like change line-break to comman etc
-# this part is slow (because of string creation) so should find a better way
+        
 for i in range(len(detailed_quotes)):
     detailed_quotes[i] = detailed_quotes[i].replace('Prev. Close:', 'Prev. Close:,', 1)
     detailed_quotes[i] = detailed_quotes[i].replace('Dividend:', 'Dividend:,', 1)
