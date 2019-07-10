@@ -12,7 +12,7 @@ from collections import deque
 a = 0
 symbol = open("symbol.txt").read().strip().replace("\"", "").split(",")
 
-for i in range(3):
+for i in range(2): #len(symbol)
     url = "https://web.tmxmoney.com/quote.php?qm_symbol="+ symbol[i]
     print(url)
     page = requests.get(url)
@@ -48,7 +48,8 @@ for i in range(3):
             detailed_quotes[i] = detailed_quotes[i].replace(',', '', 1)
 
     #Transpose data
-
+    names = []
+    values = [] 
 
     #Output check system
     ##i = 0
