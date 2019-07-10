@@ -51,11 +51,4 @@ with open("C:\\Users\\kevin\\Desktop\\python file exsports\\soup.csv", "w") as f
     f.write('\n'.join(detailed_quotes))
     #f.write('\n'.join(detailed_quotes))
 
-#Transpose data
-#attempt 1
-#pd.read_csv('soup.csv', header=None).T.to_csv('soup.csv_output.csv', header=False, index=False)
-#Attempt 2
-#a = izip(*csv.reader(open("soup.csv", "rb")))
-#csv.writer(open("soup.csv_output.csv", "wb")).writerows(a)
-
 print(detailed_quotes)
