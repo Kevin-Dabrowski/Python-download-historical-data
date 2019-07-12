@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd         #for transposing csv
 import csv                  #for transposing csv
+import time                 #for time counter
 
 # symbols and columns
 symbols = open("symbol.txt").read().strip().replace("\"", "").split(",")
@@ -12,11 +13,12 @@ data_list = []
 
 # this is the range, use this for test else you will get an error when building the df
 # simply change this to n = len(symbol) if want to use the whole thing
-n = 20
-
+n = len(symbols)
+start_time = time.time() #time counter start time
 for i in range(n):
     url = "https://web.tmxmoney.com/quote.php?qm_symbol="+ symbols[i]
-    print(url)
+    elapsed_time = time.time() - start_time                                         #time counter end time 
+    print(url,"\t","%.2f" % elapsed_time)
     page = requests.get(url)
 
     # parse webpage with BeautifulSoup, get tags with class "detailed-quote-table'
