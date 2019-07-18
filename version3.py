@@ -4,26 +4,46 @@ import pandas as pd         #for transposing csv
 import csv                  #for transposing csv
 import time                 #for time counter
 
+# parameters to scraping
+buffer = 50
+n_start = 0
+n = len(symbols)
+
 # symbols and columns
-symbols = open("symbol.txt").read().strip().replace("\"", "").split(",")
+symbols = open("symbol.txt").read().strip().split(",")
 columns = ['Open:', 'High:', 'Beta:', 'Shares Out:', 'Total Shares (All Classes):', 'Prev. Close:', 'Low:', 'VWAP:', 'Market Cap:', 'Market Cap (All Classes)*:', 'Dividend:', 'Div. Frequency:', 'P/E Ratio:', 'EPS:', 'Yield:', 'Ex-Div Date:', 'P/B Ratio:', 'Exchange:']
 
-# a list of lists to store all the data(numbers) from webscraping
-data_list = []
+data_list = buffer*[None]
+start_time = time.time()
 
-# this is the range, use this for test else you will get an error when building the df
-# simply change this to n = len(symbol) if want to use the whole thing
-n = len(symbols)
-start_time = time.time() #time counter start time
-for i in range(n):
-    url = "https://web.tmxmoney.com/quote.php?qm_symbol="+ symbols[i]
-    elapsed_time = time.time() - start_time                                         #time counter end time 
-    print(url,"\t","%.2f" % elapsed_time)
-    page = requests.get(url)
+# prepares empty file with header
+df = pd.DataFrame(columns=columns)
+df.to_csv('data.csv')
+
+def save_to_file(data_list, index_start, index_end):
+    df = pd.DataFrame(data_list, columns=columns, index=[symbols[index_start:index_end]])
+    data_list = buffer*[None]
+    with open('data.csv', 'a') as f:
+        df.to_csv(f, mode='a', header=None)
+
+def get_req(url):
+    headers = {"User-Agent":"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"}
+    try:
+        req = requests.get(url, timeout=10, headers=headers)
+    except Exception as e:
+        print(e)
+        print("Pause for 30s")
+        time.sleep(30)
+        req = get_req(url)
+    return req
+
+for i in range(n_start, n):
+    url = "https://web.tmxmoney.com/quote.php?qm_symbol="+symbols[i]
+    req = get_req(url)
 
     # parse webpage with BeautifulSoup, get tags with class "detailed-quote-table'
-    soup = BeautifulSoup(page.text, "html.parser")
-    detailed_quote_tables = soup.findAll(class_="detailed-quote-table")
+    parse = BeautifulSoup(req.text, "html.parser")
+    detailed_quote_tables = parse.findAll(class_="detailed-quote-table")
 
     # clean data into list format with only numbers
     detailed_quotes_list = [dq.get_text() for dq in detailed_quote_tables]
@@ -31,14 +51,16 @@ for i in range(n):
     detailed_quotes_list = detailed_quotes_string.split('\n')
     detailed_quotes_list = list(filter(None, detailed_quotes_list))[1::2]
 
-    data_list.append(detailed_quotes_list)
+    data_list[i % buffer] = detailed_quotes_list
+
+    elapsed_time = time.time() - start_time
+    print(url,"\t","%.2f" % elapsed_time)
+
+    if (i + 1) % buffer == 0:
+        print("saved items: ", i + 1)
+        save_to_file(data_list, i - (buffer - 1), i + 1)
 
 # create a DataFrame to store the data, which is like a table
-df = pd.DataFrame(data_list, columns=columns, index=[symbols[:n]])
-
-# the below is to print the DataFrame
-# pd.set_option('display.max_columns', None)
-# print(df.head())
-
-# export DataFrame to csv
-df.to_csv('data.csv')
+# store leftover data
+data_list = data_list[:n % buffer]
+save_to_file(data_list, n - (n % buffer), n)
