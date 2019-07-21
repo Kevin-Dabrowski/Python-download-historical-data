@@ -4,14 +4,14 @@ import pandas as pd         #for transposing csv
 import csv                  #for transposing csv
 import time                 #for time counter
 
+# symbols and columns
+symbols = open("symbol.txt").read().strip().split(",")
+columns = ['Open:', 'High:', 'Beta:', 'Shares Out:', 'Total Shares (All Classes):', 'Prev. Close:', 'Low:', 'VWAP:', 'Market Cap:', 'Market Cap (All Classes)*:', 'Dividend:', 'Div. Frequency:', 'P/E Ratio:', 'EPS:', 'Yield:', 'Ex-Div Date:', 'P/B Ratio:', 'Exchange:']
+
 # parameters to scraping
 buffer = 50
 n_start = 0
 n = len(symbols)
-
-# symbols and columns
-symbols = open("symbol.txt").read().strip().split(",")
-columns = ['Open:', 'High:', 'Beta:', 'Shares Out:', 'Total Shares (All Classes):', 'Prev. Close:', 'Low:', 'VWAP:', 'Market Cap:', 'Market Cap (All Classes)*:', 'Dividend:', 'Div. Frequency:', 'P/E Ratio:', 'EPS:', 'Yield:', 'Ex-Div Date:', 'P/B Ratio:', 'Exchange:']
 
 data_list = buffer*[None]
 start_time = time.time()
