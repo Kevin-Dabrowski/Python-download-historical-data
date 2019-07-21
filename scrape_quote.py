@@ -14,6 +14,9 @@ n_start = 0
 n = len(symbols)
 
 data_list = buffer*[None]
+empty_columns = []
+abnormal_columns = []
+
 start_time = time.time()
 
 # prepares empty file with header
@@ -51,10 +54,19 @@ for i in range(n_start, n):
     detailed_quotes_list = detailed_quotes_string.split('\n')
     detailed_quotes_list = list(filter(None, detailed_quotes_list))[1::2]
 
-    data_list[i % buffer] = detailed_quotes_list
-
     elapsed_time = time.time() - start_time
     print(url,"\t","%.2f" % elapsed_time)
+
+    # catch abnormal list
+    if len(detailed_quotes_list) == 0:
+        print("Empty quote")
+        empty_columns.append(symbols[i])
+    elif len(detailed_quotes_list) != 18:
+        print("Abnormal column length:", len(detailed_quotes_list))
+        abnormal_columns.append(symbols[i])
+        detailed_quotes_list = []
+
+    data_list[i % buffer] = detailed_quotes_list
 
     if (i + 1) % buffer == 0:
         print("saved items: ", i + 1)
@@ -64,3 +76,6 @@ for i in range(n_start, n):
 # store leftover data
 data_list = data_list[:n % buffer]
 save_to_file(data_list, n - (n % buffer), n)
+
+print("Companies with empty quotes", empty_columns)
+print("Companies with abnormal columns", abnormal_columns)
