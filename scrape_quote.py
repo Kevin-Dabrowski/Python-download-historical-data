@@ -39,7 +39,7 @@ def get_req(url):
         time.sleep(30)
         req = get_req(url)
     return req
-
+print("#","\t\t\t","URL","\t\t\t   ","elapsed_time")
 for i in range(n_start, n):
     url = "https://web.tmxmoney.com/quote.php?qm_symbol="+symbols[i]
     req = get_req(url)
@@ -55,7 +55,7 @@ for i in range(n_start, n):
     detailed_quotes_list = list(filter(None, detailed_quotes_list))[1::2]
 
     elapsed_time = time.time() - start_time
-    print(url,"\t","%.2f" % elapsed_time)
+    print(i, url,"\t","%.2f" % elapsed_time)
 
     # catch abnormal list
     if len(detailed_quotes_list) == 0:
