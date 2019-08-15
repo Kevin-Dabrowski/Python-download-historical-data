@@ -42,9 +42,10 @@ for i in range(n):
     Column3 = []
     Column4 = []
     Column5 = []
-    for a in range(rows):
-        Names_List[a] = len(driver.find_elements_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr"))
-
+    for a in range(1, 3):
+        #value = driver.find_elements_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]/span").text
+        value = driver.find_element_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr[1]/td[1]").text
+        print(value)
     time.sleep(100)
     #elem.send_keys(Keys.RETURN)
 #driver.close()
