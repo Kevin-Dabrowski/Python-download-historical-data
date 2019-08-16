@@ -18,34 +18,37 @@ driver = webdriver.Chrome()
 for i in range(n): 
     url = "https://web.tmxmoney.com/financials.php?qm_symbol="+ symbols[i]
     driver.get(url)
-    time.sleep(3)
     #change to quarterly
-##    xpath = '//*[@id="innerContent"]/div[4]/div[1]/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/a'
-##    element = driver.find_element_by_xpath(xpath)
-##    element.click()
-##    xpath = '//*[@id="innerContent"]/div[4]/div[1]/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/ul/li[2]/a'
-##    element = driver.find_element_by_xpath(xpath)
-##    element.click()
+    driver.execute_script("window.scrollTo(0, 800)")
+    time.sleep(3)
+    xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/a'
+    element = driver.find_element_by_xpath(xpath)
+    element.click()
+    xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/ul/li[2]/a'
+    element = driver.find_element_by_xpath(xpath)
+    element.click()
     #Get Balance sheet data
-##    xpath = '//*[@id="innerContent"]/div[4]/div[1]/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/a'
-##    element = driver.find_element_by_xpath(xpath)
-##    element.click()
-##    xpath = '//*[@id="innerContent"]/div[4]/div[1]/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/ul/li[2]/a'
-##    element = driver.find_element_by_xpath(xpath)
-##    element.click()
-    rows = len(driver.find_elements_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr")) #rows
-    columns = len(driver.find_elements_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr[1]/td")) #Columns
-    # get data into lists
-    Names_List = []
-    Column1 = []
-    Column2 = []
-    Column3 = []
-    Column4 = []
-    Column5 = []
-    for a in range(2, rows):
-        #value = driver.find_elements_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]/span").text
-        value = driver.find_element_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
-        print(value, a)
+    xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/a'
+    element = driver.find_element_by_xpath(xpath)
+    element.click()
+    xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/ul/li[2]/a'
+    element = driver.find_element_by_xpath(xpath)
+    element.click()
+    rows = len(driver.find_elements_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr")) #rows
+    columns = len(driver.find_elements_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr[1]/td")) #Columns
+    print(rows)
+    print(columns)
+##    # get data into lists
+##    Names_List = []
+##    Column1 = []
+##    Column2 = []
+##    Column3 = []
+##    Column4 = []
+##    Column5 = []
+##    for a in range(2, rows):
+##        #value = driver.find_elements_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]/span").text
+##        value = driver.find_element_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
+##        print(value, a)
     time.sleep(100)
     #elem.send_keys(Keys.RETURN)
 #driver.close()
