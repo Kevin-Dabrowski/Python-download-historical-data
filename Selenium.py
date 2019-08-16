@@ -20,14 +20,15 @@ for i in range(n):
     driver.get(url)
     #change to quarterly
     driver.execute_script("window.scrollTo(0, 800)")
-    time.sleep(3)
+    time.sleep(5)
     xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/a'
     element = driver.find_element_by_xpath(xpath)
     element.click()
     xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/ul/li[2]/a'
     element = driver.find_element_by_xpath(xpath)
     element.click()
-    #Get Balance sheet data
+    #Change between IncomeStatment, BalanceSheet, and Cashflow pages
+    #Names_List = ['//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/a',""]
     xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/a'
     element = driver.find_element_by_xpath(xpath)
     element.click()
@@ -38,20 +39,22 @@ for i in range(n):
     columns = len(driver.find_elements_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr[1]/td")) #Columns
     print(rows)
     print(columns)
-    # get data into lists
+    # Initialize each column of data into lists
     Names_List = ["n/a"] * rows
-    Column1 = ["n/a"] * rows
-    Column2 = ["n/a"] * rows
     Column3 = ["n/a"] * rows
     Column4 = ["n/a"] * rows
     Column5 = ["n/a"] * rows
-    for a in range(2, rows):
-        #value = driver.find_elements_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]/span").text
-        #value = driver.find_element_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
+    Column6 = ["n/a"] * rows
+    Column7 = ["n/a"] * rows
+    #loop to get data from each row in the table
+    for a in range(1, rows):
         Names_List[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
-        Names_List[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
-        print(Names_List[a])
-        #print(value, a)
-    time.sleep(100)
+        Column3[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text
+        Column4[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[4]").text
+        Column5[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[5]").text
+        Column6[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[6]").text
+        Column7[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[7]").text
+        print(Names_List[a],Column3[a],Column4[a],Column5[a],Column6[a],Column7[a])
+    time.sleep(10)
     #elem.send_keys(Keys.RETURN)
 #driver.close()
