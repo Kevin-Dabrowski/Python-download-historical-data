@@ -37,29 +37,60 @@ for i in range(n):
         xpath = "//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/ul/li["+str(b)+"]/a"
         element = driver.find_element_by_xpath(xpath)
         element.click()
+        time.sleep(2)
         #Count the number of rows and columns
         rows = len(driver.find_elements_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr")) #rows
         columns = len(driver.find_elements_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr[1]/td")) #Columns
-        print(rows)
-        print(columns)
+        #print(rows)
+        #print(columns)
         # Initialize each column of data into lists
-        Names_List = ["n/a"] * rows
-        Column3 = ["n/a"] * rows
-        Column4 = ["n/a"] * rows
-        Column5 = ["n/a"] * rows
-        Column6 = ["n/a"] * rows
-        Column7 = ["n/a"] * rows
-        #loop to get data from each row in the table
+        Names_List = [""] * rows
+        Column3 = [""] * rows
+        Column4 = [""] * rows
+        Column5 = [""] * rows
+        Column6 = [""] * rows
+        Column7 = [""] * rows
+        ListTemp = 1                                #Temp for holding point in the lists so that there arent gaps when writing the lists to a file
+        #loop to get data from each row into lists
         for a in range(1, rows):            
-            Column3[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text
+            Column3[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text         #test case so you dont have to do it for each column
             if Column3[a] == "" or Column3[a] == "—":
                 pass
             else:
-                Names_List[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
-                Column4[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[4]").text
-                Column5[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[5]").text
-                Column6[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[6]").text
-                Column7[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[7]").text
-                print(Names_List[a],Column3[a],Column4[a],Column5[a],Column6[a],Column7[a])
-        print("\n")
-#driver.close()
+                Names_List[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
+                Column3[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text
+                Column4[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[4]").text
+                Column5[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[5]").text
+                Column6[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[6]").text
+                Column7[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[7]").text
+                print(Names_List[ListTemp],Column3[ListTemp],Column4[ListTemp],Column5[ListTemp],Column6[ListTemp],Column7[ListTemp])
+                ListTemp = ListTemp+1
+        #Write lists to file
+        f = open("test.csv", "a")
+        f.write("\n"+symbols[i]+",")
+        for a in range(1, ListTemp):  
+            f = open("test.csv", "a")
+            f.write(Names_List[a]+",")
+        f.write("\n"+symbols[i]+",")
+        for a in range(1, ListTemp):  
+            f = open("test.csv", "a")
+            f.write(Column3[a]+",")
+        f.write("\n"+symbols[i]+",")
+        for a in range(1, ListTemp):  
+            f = open("test.csv", "a")
+            f.write(Column4[a]+",")
+        f.write("\n"+symbols[i]+",")
+        for a in range(1, ListTemp):  
+            f = open("test.csv", "a")
+            f.write(Column5[a]+",")
+        f.write("\n"+symbols[i]+",")
+        for a in range(1, ListTemp):  
+            f = open("test.csv", "a")
+            f.write(Column6[a]+",")
+        f.write("\n"+symbols[i]+",")
+        for a in range(1, ListTemp):  
+            f = open("test.csv", "a")
+            f.write(Column7[a]+",")
+        #f.write("Now the file has more content!")
+        f = open("test.csv", "a")
+driver.close()
