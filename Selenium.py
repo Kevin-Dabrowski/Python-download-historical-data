@@ -38,17 +38,20 @@ for i in range(n):
     columns = len(driver.find_elements_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr[1]/td")) #Columns
     print(rows)
     print(columns)
-##    # get data into lists
-##    Names_List = []
-##    Column1 = []
-##    Column2 = []
-##    Column3 = []
-##    Column4 = []
-##    Column5 = []
-##    for a in range(2, rows):
-##        #value = driver.find_elements_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]/span").text
-##        value = driver.find_element_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
-##        print(value, a)
+    # get data into lists
+    Names_List = ["n/a"] * rows
+    Column1 = ["n/a"] * rows
+    Column2 = ["n/a"] * rows
+    Column3 = ["n/a"] * rows
+    Column4 = ["n/a"] * rows
+    Column5 = ["n/a"] * rows
+    for a in range(2, rows):
+        #value = driver.find_elements_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]/span").text
+        #value = driver.find_element_by_xpath("//*[@id='innerContent']/div[4]/div[1]/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
+        Names_List[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
+        Names_List[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
+        print(Names_List[a])
+        #print(value, a)
     time.sleep(100)
     #elem.send_keys(Keys.RETURN)
 #driver.close()
