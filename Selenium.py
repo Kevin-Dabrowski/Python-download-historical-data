@@ -11,8 +11,9 @@ symbols = ["AAB", "AAV", "ABT", "ABX", "AC", "ACB", "ACB.WT", "ACD", "ACD.DB", "
 Income_Statment = [symbols,"Amortization Of Deferred Acquisition Costs","Basic","Basic Accounting Change","Basic Average Shares","Basic Continuous Operations","Basic Discontinuous Operations","Basic Extraordinary","Basic Other Gains Losses","Continuing And Discontinued Basic","Continuing And Discontinued Diluted","Cost Of Revenue","Credit Losses Provision","Depreciation Amortization Depletion","Diluted","Diluted Average Shares","Diluted Continuous Operations","Diluted Discontinuous Operations","Diluted Extraordinary","Diluted Other Gains Losses","Dividend Per Share","Earnings From Equity Interest","EBIT","EBITDA","Fee Revenue And Other Income","Fees And Commissions","Foreign Exchange Trading Gains","Fuel","Gain On Sale Of","Gain On Sale Of Security","Gross Profit","Interest Expense","Interest Expense Non Operating","Interest Income","Interest Income After Provision For Loan Loss","Interest Income Non Operating","Investment Banking Profit","Loss Adjustment Expense","Maintenance And Repairs","Net Foreign Exchange Gain Loss","Net Income","Net Income Common Stockholders","Net Income From Continuing And Discontinued Operation","Net Interest Income","Net Investment Income","Net Non Operating Interest Income Expense","Net Operating Interest Income Expense","Net Policyholder Benefits And Claims","Net Realized Gain Loss On Investments","Non Interest Expense","Non Interest Income","Normalized Income","Occupancy And Equipment","Operating Expense","Operating Income","Operating Revenue","Other Income Expense","Other Non Interest Expense","Other Non Interest Income","Other Operating Expenses","Other Taxes","Policy Acquisition Expense","Policyholder Dividends","Policyholder Interest","Preferred Stock Dividends","Pretax Income","Principle Transaction Revenue","Professional Expense And Contract Services Expense","Property Liability Insurance Claims","Research And Development","Securities Amortization","Selling General And Administration","Special Income Charges","Tax Loss Carryforward Basic","Tax Loss Carryforward Diluted","Tax Provision","Total Expenses","Total Money Market Investments","Total Premiums Earned","Total Revenue","Underwriting Expenses"]
 Balance_Sheet = [symbols,"End Cash Position","Federal Funds Purchased And Securities Sold Under Agreement To Repurchase","Financials for Canadian Pacific Railway Limited","Financing Cash Flow","Fiscal Year ends in Jun","Goodwill And Other Intangible Assets","Income Tax Paid Supplemental Data","Interest Paid Supplemental Data","Investing Cash Flow","Long Term Debt And Capital Lease Obligation","Long Term Equity Investment","Long Term Provisions","Minority Interest","Net","Net Loan","Non Current Accrued Expenses","Non Current Deferred Liabilities","Operating Cash Flow","Other Assets","Period","Preferred Stock Equity","Prepaid Assets","Quarterly Report","Receivables","Reinsurance Recoverable","Repayment Of Debt","Restricted Cash And Cash Equivalents","Restricted Common Stock","Securities And Investments","Securities Lending Collateral","Security Borrowed","Security Sold Not Yet Repurchased","Separate Account Liability","Stockholders Equity","Total Assets","Total Capitalization","Total Investments","Total Liabilities","Total Non Current Assets","Total Non Current Liabilities","Total Partnership Capital","Total Policy Holders Liabilities","Trading Liabilities","Trust Preferred Securities","Total Non Current Liabilities Net Minority Interes","Total Deposits","Total Deferred Credits And Other Non Current Liabilities","Separate Account Assets","Preferred Securities Outside Stock Equity","Payables And Accrued Expenses","Other Liabilities","Issuance Of Debt","Employee Benefits","Effect Of Exchange Rate Changes","Derivative Product Liabilities","Derivative Assets","Defined Pension Benefit","Deferred Policy Acquisition Costs","Deferred Costs","Deferred Assets","Customer Acceptances","Current Provisions","Current Liabilities","Current Deferred Liabilities","Current Debt And Capital Lease Obligation","Current Assets","Changes In Cash","Ceded Unearned Premiums","Cash Cash Equivalents And Federal Funds Sold","Cash And Cash Equivalents","Capital Lease Obligations","Beginning Cash Position","Balance Sheet","Assets Of Discontinued Operations","All","Accrued Investment Income"]
 Cash_Flow = [symbols,"Beginning Cash Position","Capital Lease Obligations","Cash Flow From Continuing Financing Activities","Cash Flow From Continuing Investing Activities","Cash Flow From Continuing Operating Activities","Cash Flow From Discontinued Operation","Cash From Discontinued Financing Activities","Cash From Discontinued Investing Activities","Cash From Discontinued Operating Activities","Change In Inventory","Change In Other Current Assets","Change In Payable","Change In Receivables","Change In Working Capital","Changes In Account Receivables","Changes In Cash","Current Assets","Current Liabilities","Depreciation Amortization Depletion","Effect Of Exchange Rate Changes","End Cash Position","Financing Cash Flow","Gain Loss On Investment Securities","Gain Loss On Sale Of","Income Tax Paid Supplemental Data","Interest Paid Supplemental Data","Investing Cash Flow","Issuance Of Capital Stock","Issuance Of Debt","Long Term Debt And Capital Lease Obligation","Minority Interest","Net Income From Continuing Operations","Operating Cash Flow","Operating Gains Losses","Other Non Cash Items","Repayment Of Debt","Stockholders Equity","Total Assets","Total Capitalization","Total Liabilities","Total Non Current Assets","Total Non Current Liabilities"]
-
 n = len(symbols)
+
+open('test.csv', 'w').close()   #Clear old file
 
 driver = webdriver.Chrome()
 for i in range(n): 
@@ -50,7 +51,8 @@ for i in range(n):
         Column5 = [""] * rows
         Column6 = [""] * rows
         Column7 = [""] * rows
-        ListTemp = 1                                #Temp for holding point in the lists so that there arent gaps when writing the lists to a file
+        ListTotal = [Names_List, Column3, Column4, Column5, Column6, Column7]   #List made of all the other lists 
+        ListTemp = 1                                                            #Temp for holding point in the lists so that there arent gaps when writing the lists to a file
         #loop to get data from each row into lists
         for a in range(1, rows):            
             Column3[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text         #test case so you dont have to do it for each column
@@ -65,9 +67,9 @@ for i in range(n):
                 Column7[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[7]").text
                 print(Names_List[ListTemp],Column3[ListTemp],Column4[ListTemp],Column5[ListTemp],Column6[ListTemp],Column7[ListTemp])
                 ListTemp = ListTemp+1
+        print("\n")                     #Ads a space between tables when it prints them
         #Write lists to file
-        f = open("test.csv", "a")
-        f.write("\n"+symbols[i]+",")
+        f = open("test.csv", "a")       #start appending to new file 
         for a in range(1, ListTemp):  
             f = open("test.csv", "a")
             f.write(Names_List[a]+",")
@@ -91,6 +93,7 @@ for i in range(n):
         for a in range(1, ListTemp):  
             f = open("test.csv", "a")
             f.write(Column7[a]+",")
+        f.write("\n"+symbols[i]+",")
         #f.write("Now the file has more content!")
         f = open("test.csv", "a")
 driver.close()
