@@ -47,8 +47,9 @@ for i in range(n_start, 3):
     detailed_quotes_list = [dq.get_text() for dq in detailed_quote_tables]
     detailed_quotes_string = ''.join(detailed_quotes_list)
     detailed_quotes = detailed_quotes_string
-    print(detailed_quotes)
+    print(detailed_quote_tables)
     #Replace all the crazy shit
+    detailed_quotes = detailed_quotes.replace('<div class="dq-card">', '', 1)
     detailed_quotes = detailed_quotes.replace('Prev. Close', '', 1)
     detailed_quotes = detailed_quotes.replace('Dividend', '', 1)
     detailed_quotes = detailed_quotes.replace('Yield', '', 1)
