@@ -21,14 +21,6 @@ start_time = time.time()
 
 # prepares empty file with header
 open('data.csv', 'w').close()       #Erase old fild
-df = pd.DataFrame(columns=columns)
-df.to_csv('data.csv')
-
-def save_to_file(data_list, index_start, index_end):
-    df = pd.DataFrame(data_list, columns=columns, index=[symbols[index_start:index_end]])
-    data_list = buffer*[None]
-    with open('data.csv', 'a') as f:
-        df.to_csv(f, mode='a', header=None)
 
 def get_req(url):
     headers = {"User-Agent":"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"}
@@ -41,6 +33,10 @@ def get_req(url):
         req = get_req(url)
     return req
 
+for i in range(len(columns)):
+    f = open("data.csv", "a")
+    f.write(columns[i]+",")
+
 print("#","\t\t\t","URL","\t\t\t   ","elapsed_time")
 for i in range(n_start, 3):
     url = "https://web.tmxmoney.com/quote.php?qm_symbol="+symbols[i]
@@ -51,6 +47,7 @@ for i in range(n_start, 3):
     detailed_quotes_list = [dq.get_text() for dq in detailed_quote_tables]
     detailed_quotes_string = ''.join(detailed_quotes_list)
     detailed_quotes = detailed_quotes_string
+    print(detailed_quotes)
     #Replace all the crazy shit
     detailed_quotes = detailed_quotes.replace('Prev. Close', '', 1)
     detailed_quotes = detailed_quotes.replace('Dividend', '', 1)
@@ -70,13 +67,13 @@ for i in range(n_start, 3):
     detailed_quotes = detailed_quotes.replace('Ex-Div Date', '', 1)
     detailed_quotes = detailed_quotes.replace('P/B Ratio', '', 1)
     detailed_quotes = detailed_quotes.replace('VWAP', '', 1)
-    detailed_quotes = detailed_quotes.replace('\t', '')
+    detailed_quotes = detailed_quotes.replace('	', '')
     detailed_quotes = detailed_quotes.replace('\n', '')
     detailed_quotes = detailed_quotes.replace(',', '')
     detailed_quotes = detailed_quotes.replace(':', ',')
-    print(detailed_quotes)
     f = open("data.csv", "a")
     f.write(detailed_quotes)
+    print(detailed_quotes)
 
     elapsed_time = time.time() - start_time
     print(i, url,"\t","%.2f" % elapsed_time)
