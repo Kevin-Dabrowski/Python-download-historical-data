@@ -29,16 +29,17 @@ def get_req(url):
     except Exception as e:
         print(e)
         print("Pause for 30s")
-        time.sleep(30)
+        time.sleep(15)
         req = get_req(url)
     return req
 
+#Print header
+f = open("data.csv", "a")
 for i in range(len(columns)):
-    f = open("data.csv", "a")
-    f.write(columns[i]+",")
+    f.write("Symbol,"+columns[i])
 
 print("#","\t\t\t","URL","\t\t\t   ","elapsed_time")
-for i in range(n_start, 3):
+for i in range(n_start, n):
     url = "https://web.tmxmoney.com/quote.php?qm_symbol="+symbols[i]
     req = get_req(url)
     # parse webpage with BeautifulSoup, get tags with class "detailed-quote-table'
@@ -47,7 +48,6 @@ for i in range(n_start, 3):
     detailed_quotes_list = [dq.get_text() for dq in detailed_quote_tables]
     detailed_quotes_string = ''.join(detailed_quotes_list)
     detailed_quotes = detailed_quotes_string
-    print(detailed_quote_tables)
     #Replace all the crazy shit
     detailed_quotes = detailed_quotes.replace('<div class="dq-card">', '', 1)
     detailed_quotes = detailed_quotes.replace('Prev. Close', '', 1)
@@ -72,9 +72,12 @@ for i in range(n_start, 3):
     detailed_quotes = detailed_quotes.replace('\n', '')
     detailed_quotes = detailed_quotes.replace(',', '')
     detailed_quotes = detailed_quotes.replace(':', ',')
+    detailed_quotes = detailed_quotes.replace('\r', '')
+    #Convert to text
+    for a in range(n_start, n):
+        temps = ""
     f = open("data.csv", "a")
-    f.write(detailed_quotes)
-    print(detailed_quotes)
-
+    f.write("\n"+symbols[i]+","+detailed_quotes)
+    #Print timelaps and General info
     elapsed_time = time.time() - start_time
     print(i, url,"\t","%.2f" % elapsed_time)
