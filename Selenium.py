@@ -14,7 +14,7 @@ Balance_Sheet = [symbols,"End Cash Position","Federal Funds Purchased And Securi
 Cash_Flow = [symbols,"Beginning Cash Position","Capital Lease Obligations","Cash Flow From Continuing Financing Activities","Cash Flow From Continuing Investing Activities","Cash Flow From Continuing Operating Activities","Cash Flow From Discontinued Operation","Cash From Discontinued Financing Activities","Cash From Discontinued Investing Activities","Cash From Discontinued Operating Activities","Change In Inventory","Change In Other Current Assets","Change In Payable","Change In Receivables","Change In Working Capital","Changes In Account Receivables","Changes In Cash","Current Assets","Current Liabilities","Depreciation Amortization Depletion","Effect Of Exchange Rate Changes","End Cash Position","Financing Cash Flow","Gain Loss On Investment Securities","Gain Loss On Sale Of","Income Tax Paid Supplemental Data","Interest Paid Supplemental Data","Investing Cash Flow","Issuance Of Capital Stock","Issuance Of Debt","Long Term Debt And Capital Lease Obligation","Minority Interest","Net Income From Continuing Operations","Operating Cash Flow","Operating Gains Losses","Other Non Cash Items","Repayment Of Debt","Stockholders Equity","Total Assets","Total Capitalization","Total Liabilities","Total Non Current Assets","Total Non Current Liabilities"]
 n = len(symbols)
 
-open('test.csv', 'w').close()   #Clear old file
+open('data2.csv', 'w').close()   #Clear old file
 
 
 driver = webdriver.Chrome()
@@ -24,7 +24,7 @@ for i in range(n):
     driver.get(url)
     #change to quarterly
     driver.execute_script("window.scrollTo(0, 800)")
-    time.sleep(2)
+    time.sleep(4)
     xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/a'
     element = driver.find_element_by_xpath(xpath)
     element.click()
@@ -48,7 +48,8 @@ for i in range(n):
         #print(rows)
         #print(columns)
         # Initialize each column of data into lists
-        Names_List = [""] * rows
+        Names_List = [""] * rows    #row titles
+        Column_titles = [""] * 6    #column titles
         Column3 = [""] * rows
         Column4 = [""] * rows
         Column5 = [""] * rows
@@ -56,10 +57,11 @@ for i in range(n):
         Column7 = [""] * rows
         ListTotal = [Names_List, Column3, Column4, Column5, Column6, Column7]   #List made of all the other lists 
         ListTemp = 1                                                            #Temp for holding point in the lists so that there arent gaps when writing the lists to a file
-        # Get titles of each list
-        #
-        #
-        #
+        # Get titles of each list   
+        Column_titles[0] = symbols[i]    #Making the first element the stock symbol       
+        for d in range(3,8):             #Number of column titles and theyre xpaths are 3-7 on the website
+            Column_titles[d-2] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/thead/tr/th["+str(d)+"]").text
+        print(Column_titles)
         #loop to get data from each row into lists
         for a in range(1, rows):            
             Column3[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text             #test case so you dont have to do it for each column
@@ -76,9 +78,9 @@ for i in range(n):
                 ListTemp = ListTemp+1
         print("\n")                    #Adds a space between tables when it prints them
         #Write lists to file
-        f = open("test.csv", "a")       #start appending to new file
+        f = open("data2.csv", "a")       #start appending to new file
         for c in range(0, 6):
-            f.write(symbols[i])
+            f.write(Column_titles[c])
             for d in range(0, ListTemp):  
                 f.write(ListTotal[c][d]+",")
             f.write("\n")
