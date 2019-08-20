@@ -16,7 +16,6 @@ n = len(symbols)
 
 open('data2.csv', 'w').close()   #Clear old file
 
-
 driver = webdriver.Chrome()
 for i in range(n):
     start_time = time.time()        #Time counter start
@@ -61,7 +60,6 @@ for i in range(n):
         Column_titles[0] = symbols[i]    #Making the first element the stock symbol       
         for d in range(3,8):             #Number of column titles and theyre xpaths are 3-7 on the website
             Column_titles[d-2] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/thead/tr/th["+str(d)+"]").text
-        print(Column_titles)
         #loop to get data from each row into lists
         for a in range(1, rows):            
             Column3[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text             #test case so you dont have to do it for each column
@@ -84,6 +82,7 @@ for i in range(n):
             for d in range(0, ListTemp):  
                 f.write(ListTotal[c][d]+",")
             f.write("\n")
+    f.close()
     elapsed_time = time.time() - start_time
     print(symbols[i],"\t","%.2f" % elapsed_time)
 driver.close()
