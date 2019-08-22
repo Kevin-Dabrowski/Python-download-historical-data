@@ -33,14 +33,17 @@ for d in range(100):                #Manually typed in the number of rows becaus
     Column7[d] = lists[d][6]
     #print(d,Column1[d],Column2[d],Column3[d],Column4[d],Column5[d],Column6[d],Column7[d])
 #Remove comma from first list
-    
+for c in range(0,100):
+    temp = str(Column1[c])
+    temp=temp.replace(', 2019', '')
+    Column1[c] = temp
+print(Column1)
 #Write to file
 for a in range(7): 
     for b in range(99,0,-1):            #Cant do 100 because it crashes for some reason
         f = open("data3.csv", "a")
         f.write('%s' % ListTotal[a][b]+',')
     f.write("\r")
-print(ListTotal[a])
 ##f.write(str(lists[0]))
 ##f.write("\n")
 ##f.write("bob")
@@ -52,4 +55,3 @@ print(ListTotal[a])
 ##    df.to_csv(r'C:\Users\kevin\Desktop\python file exsports\web-scraper-master\data3.csv')
 ##    f = open("data3.csv", "a")
 ##    f.write(str(df)+"\n")
-
