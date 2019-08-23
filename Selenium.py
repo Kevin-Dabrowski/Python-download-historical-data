@@ -82,7 +82,7 @@ for i in range(n):
             for d in range(0, ListTemp):  
                 f.write(ListTotal[c][d]+",")
             f.write("\n")
-    f.close()
+        f.close()
     elapsed_time = time.time() - start_time
     print(symbols[i],"\t","%.2f" % elapsed_time)
 driver.close()
