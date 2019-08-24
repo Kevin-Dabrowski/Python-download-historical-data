@@ -23,7 +23,9 @@ for i in range(n):
     driver.get(url)
     #change to quarterly
     driver.execute_script("window.scrollTo(0, 800)")
-    time.sleep(4)
+    if i == 0:
+        time.sleep(2)
+    time.sleep(2)
     xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/a'
     element = driver.find_element_by_xpath(xpath)
     element.click()
@@ -74,6 +76,12 @@ for i in range(n):
                 Column7[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[7]").text
                 print(Names_List[ListTemp],Column3[ListTemp],Column4[ListTemp],Column5[ListTemp],Column6[ListTemp],Column7[ListTemp])                                                #Prints Tables
                 ListTemp = ListTemp+1
+        # Remove commas in each list so when they print to the csv the commas dont fuck up the columns
+        for c in range(0, 6):
+            for d in range(0, ListTemp):
+                temp = str(ListTotal[c][d])
+                temp=temp.replace(',', '')
+                ListTotal[c][d] = temp 
         print("\n")                    #Adds a space between tables when it prints them
         #Write lists to file
         f = open("data2.csv", "a")       #start appending to new file
@@ -82,7 +90,7 @@ for i in range(n):
             for d in range(0, ListTemp):  
                 f.write(ListTotal[c][d]+",")
             f.write("\n")
-        f.close()
+    f.close()
     elapsed_time = time.time() - start_time
     print(symbols[i],"\t","%.2f" % elapsed_time)
 driver.close()
