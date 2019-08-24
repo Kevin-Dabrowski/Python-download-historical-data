@@ -17,80 +17,81 @@ n = len(symbols)
 open('data2.csv', 'w').close()   #Clear old file
 
 driver = webdriver.Chrome()
-for i in range(n):
-    start_time = time.time()        #Time counter start
-    url = "https://web.tmxmoney.com/financials.php?qm_symbol="+ symbols[i]
-    driver.get(url)
-    #change to quarterly
-    driver.execute_script("window.scrollTo(0, 800)")
-    if i == 0:
-        time.sleep(2)
-    time.sleep(2)
-    xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/a'
-    element = driver.find_element_by_xpath(xpath)
-    element.click()
-    xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/ul/li[2]/a'
-    element = driver.find_element_by_xpath(xpath)
-    element.click()
-    #Click Type of data dropdown menu
-    Button = ['//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/a',""]
-    xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/a'
-    element = driver.find_element_by_xpath(xpath)
-    element.click()
-    #Change between IncomeStatment, BalanceSheet, and Cashflow pages
-    for b in range(1, 4):
-        xpath = "//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/ul/li["+str(b)+"]/a"
+for i in range(5, n):
+    try:                                #Instead of doing this try and actually fix the errors because it skips like 50% of loops
+        start_time = time.time()        #Time counter start
+        url = "https://web.tmxmoney.com/financials.php?qm_symbol="+ symbols[i]
+        driver.get(url)
+        #change to quarterly
+        driver.execute_script("window.scrollTo(0, 800)")
+        time.sleep(4)
+        xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/a'
         element = driver.find_element_by_xpath(xpath)
         element.click()
-        time.sleep(0.5)
-        #Count the number of rows and columns
-        rows = len(driver.find_elements_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr")) #rows
-        columns = len(driver.find_elements_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr[1]/td")) #Columns
-        #print(rows)
-        #print(columns)
-        # Initialize each column of data into lists
-        Names_List = [""] * rows    #row titles
-        Column_titles = [""] * 6    #column titles
-        Column3 = [""] * rows
-        Column4 = [""] * rows
-        Column5 = [""] * rows
-        Column6 = [""] * rows
-        Column7 = [""] * rows
-        ListTotal = [Names_List, Column3, Column4, Column5, Column6, Column7]   #List made of all the other lists 
-        ListTemp = 1                                                            #Temp for holding point in the lists so that there arent gaps when writing the lists to a file
-        # Get titles of each list   
-        Column_titles[0] = symbols[i]    #Making the first element the stock symbol       
-        for d in range(3,8):             #Number of column titles and theyre xpaths are 3-7 on the website
-            Column_titles[d-2] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/thead/tr/th["+str(d)+"]").text
-        #loop to get data from each row into lists
-        for a in range(1, rows):            
-            Column3[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text             #test case so you dont have to do it for each column
-            if Column3[a] == "" or Column3[a] == "—":
-                pass
-            else:
-                Names_List[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
-                Column3[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text
-                Column4[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[4]").text
-                Column5[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[5]").text
-                Column6[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[6]").text
-                Column7[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[7]").text
-                print(Names_List[ListTemp],Column3[ListTemp],Column4[ListTemp],Column5[ListTemp],Column6[ListTemp],Column7[ListTemp])                                                #Prints Tables
-                ListTemp = ListTemp+1
-        # Remove commas in each list so when they print to the csv the commas dont fuck up the columns
-        for c in range(0, 6):
-            for d in range(0, ListTemp):
-                temp = str(ListTotal[c][d])
-                temp=temp.replace(',', '')
-                ListTotal[c][d] = temp 
-        print("\n")                    #Adds a space between tables when it prints them
-        #Write lists to file
-        f = open("data2.csv", "a")       #start appending to new file
-        for c in range(0, 6):
-            f.write(Column_titles[c])
-            for d in range(0, ListTemp):  
-                f.write(ListTotal[c][d]+",")
-            f.write("\n")
-    f.close()
-    elapsed_time = time.time() - start_time
-    print(symbols[i],"\t","%.2f" % elapsed_time)
+        xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[2]/div/div/ul/li[2]/a'
+        element = driver.find_element_by_xpath(xpath)
+        element.click()
+        #Click Type of data dropdown menu
+        Button = ['//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/a',""]
+        xpath = '//*[@id="pane-charting"]/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/a'
+        element = driver.find_element_by_xpath(xpath)
+        element.click()
+        #Change between IncomeStatment, BalanceSheet, and Cashflow pages
+        for b in range(1, 4):
+            xpath = "//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[1]/div/div[1]/div[1]/div/div/ul/li["+str(b)+"]/a"
+            element = driver.find_element_by_xpath(xpath)
+            element.click()
+            time.sleep(0.3)
+            #Count the number of rows and columns
+            rows = len(driver.find_elements_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr")) #rows
+            columns = len(driver.find_elements_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr[1]/td")) #Columns
+            #print(rows)
+            #print(columns)
+            # Initialize each column of data into lists
+            Names_List = [""] * rows    #row titles
+            Column_titles = [""] * 6    #column titles
+            Column3 = [""] * rows
+            Column4 = [""] * rows
+            Column5 = [""] * rows
+            Column6 = [""] * rows
+            Column7 = [""] * rows
+            ListTotal = [Names_List, Column3, Column4, Column5, Column6, Column7]   #List made of all the other lists 
+            ListTemp = 1                                                            #Temp for holding point in the lists so that there arent gaps when writing the lists to a file
+            # Get titles of each list   
+            Column_titles[0] = symbols[i]    #Making the first element the stock symbol       
+            for d in range(3,8):             #Number of column titles and theyre xpaths are 3-7 on the website
+                Column_titles[d-2] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/thead/tr/th["+str(d)+"]").text
+            #loop to get data from each row into lists
+            for a in range(1, rows):            
+                Column3[a] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text             #test case so you dont have to do it for each column
+                if Column3[a] == "" or Column3[a] == "—":
+                    pass
+                else:
+                    Names_List[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[1]").text
+                    Column3[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[3]").text
+                    Column4[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[4]").text
+                    Column5[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[5]").text
+                    Column6[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[6]").text
+                    Column7[ListTemp] = driver.find_element_by_xpath("//*[@id='pane-charting']/div/div/div[1]/div/div/div[2]/div/div[1]/div[2]/table/tbody/tr["+str(a)+"]/td[7]").text
+                    #print(Names_List[ListTemp],Column3[ListTemp],Column4[ListTemp],Column5[ListTemp],Column6[ListTemp],Column7[ListTemp])                                                #Prints Tables
+                    ListTemp = ListTemp+1
+            #print("\n")                    #Adds a space between tables when it prints them
+            # Remove commas in each list so when they print to the csv the commas dont fuck up the columns
+            for c in range(0, 6):
+                for d in range(0, ListTemp):
+                    temp = str(ListTotal[c][d])
+                    temp=temp.replace(',', '')
+                    ListTotal[c][d] = temp 
+            #Write lists to file
+            f = open("data2.csv", "a")       #start appending to new file
+            for c in range(0, 6):
+                f.write(Column_titles[c])
+                for d in range(0, ListTemp):  
+                    f.write(ListTotal[c][d]+",")
+                f.write("\n")
+        f.close()
+        elapsed_time = time.time() - start_time
+        print(i, symbols[i],"\t","%.2f" % elapsed_time)
+    except:
+        pass
 driver.close()
