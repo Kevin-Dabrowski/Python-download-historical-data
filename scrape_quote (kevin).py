@@ -9,15 +9,13 @@ symbols = open("symbol.txt").read().strip().split(",")
 columns = ['Open:', 'High:', 'Beta:', 'Shares Out:', 'Total Shares (All Classes):', 'Prev. Close:', 'Low:', 'VWAP:', 'Market Cap:', 'Market Cap (All Classes)*:', 'Dividend:', 'Div. Frequency:', 'P/E Ratio:', 'EPS:', 'Yield:', 'Ex-Div Date:', 'P/B Ratio:', 'Exchange:']
 
 # parameters to scraping
-buffer = 5
+buffer = 50
 n_start = 0
 n = len(symbols)
 
 data_list = buffer*[None]
 empty_columns = []
 abnormal_columns = []
-
-start_time = time.time()
 
 # prepares empty file with header
 open('data.csv', 'w').close()       #Erase old fild
@@ -28,7 +26,7 @@ def get_req(url):
         req = requests.get(url, timeout=10, headers=headers)
     except Exception as e:
         print(e)
-        print("Pause for 30s")
+        print("Pause for 15s")
         time.sleep(15)
         req = get_req(url)
     return req
@@ -40,6 +38,7 @@ for i in range(len(columns)):
 
 print("#","\t\t\t","URL","\t\t\t   ","elapsed_time")
 for i in range(n_start, n):
+    start_time = time.time()
     url = "https://web.tmxmoney.com/quote.php?qm_symbol="+symbols[i]
     req = get_req(url)
     # parse webpage with BeautifulSoup, get tags with class "detailed-quote-table'
@@ -73,6 +72,7 @@ for i in range(n_start, n):
     detailed_quotes = detailed_quotes.replace(',', '')
     detailed_quotes = detailed_quotes.replace(':', ',')
     detailed_quotes = detailed_quotes.replace('\r', '')
+    detailed_quotes = detailed_quotes.replace('N/A', '-')
     #Convert to text
     for a in range(n_start, n):
         temps = ""
