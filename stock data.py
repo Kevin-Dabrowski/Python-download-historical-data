@@ -8,8 +8,9 @@ open('data3.csv', 'w').close()       #Erase old fild
 symbols = open("symbol.txt").read().strip().split(",")
 
 # parameters to scraping
-n_start = 0
-n = len(symbols)
+n_start = 9
+n = 16
+#len(symbols)
 
 for i in range(n_start, n):
     try:                            #Instead of doing this try and actually fix the errors because it skips like 50% of loops
@@ -54,6 +55,29 @@ for i in range(n_start, n):
             f.write("\r")
         #Print timelaps and General info
         elapsed_time = time.time() - start_time
-        print(i, "\t","%.2f" % elapsed_time)
+        print(i, symbols[i], "\t","%.2f" % elapsed_time)
+    #make a exception that it write to file a emply list if it cant get the normal list
     except:
-        pass
+        start_time = time.time()
+        #Declare lists
+        Column1 = ["-"] * (100) #Removes last row which is weird text
+        Column2 = ["-"] * (100)
+        Column3 = ["-"] * (100)
+        Column4 = ["-"] * (100)
+        Column5 = ["-"] * (100)
+        Column6 = ["-"] * (100)
+        Column7 = ["-"] * (100)
+        ListTotal = [Column1,Column2, Column3, Column4, Column5, Column6, Column7]
+        header = ["Date","Open","High","Low","Close","Adj Close","Volume"]
+        #Write to file in reverse order (oldest to newest)
+        for a in range(0,7):
+            f = open("data3.csv", "a")
+            f.write(symbols[i]+",")
+            f.write(header[a]+",")
+            for b in range(99,0,-1):                    #Cant do 100 because it crashes for some reason
+                f = open("data3.csv", "a")              #Has to be here or it wont write to file for some reasons even tho its also writen outside the loop
+                f.write('%s' % ListTotal[a][b]+',')
+            f.write("\r")
+        #Print timelaps and General info
+        elapsed_time = time.time() - start_time
+        print(i, symbols[i], "\t","%.2f" % elapsed_time, "\t", "Fail") # added it to show failures
