@@ -60,13 +60,13 @@ for i in range(n_start, n):
     except:
         start_time = time.time()
         #Declare lists
-        Column1 = ["-"] * (100) #Removes last row which is weird text
-        Column2 = ["-"] * (100)
-        Column3 = ["-"] * (100)
-        Column4 = ["-"] * (100)
-        Column5 = ["-"] * (100)
-        Column6 = ["-"] * (100)
-        Column7 = ["-"] * (100)
+        Column1 = [""] * (100) #Removes last row which is weird text
+        Column2 = [""] * (100)
+        Column3 = [""] * (100)
+        Column4 = [""] * (100)
+        Column5 = [""] * (100)
+        Column6 = [""] * (100)
+        Column7 = [""] * (100)
         ListTotal = [Column1,Column2, Column3, Column4, Column5, Column6, Column7]
         header = ["Date","Open","High","Low","Close","Adj Close","Volume"]
         #Write to file in reverse order (oldest to newest)
